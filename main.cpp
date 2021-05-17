@@ -8,6 +8,8 @@
 #include <cctype>
 #include <map>
 #include <set>
+#include <queue>
+#include <stack>
 
 #define MAX 507
 
@@ -312,6 +314,51 @@ void make_table() {
 #endif
 }
 
+queue<char> InputQueue;
+stack<string> AnaStack;
+
+void parse() {
+    string input = "(i+i)*(i*i)~";
+    for (char ch: input) {
+        InputQueue.push(ch);
+    }
+    AnaStack.push("~");
+    AnaStack.push(VN_set[0].left);
+
+    while (!AnaStack.empty()) {
+        auto top_ch = AnaStack.top();
+        auto VN_index = VN_dic[top_ch];
+        if (VN_index) {
+            auto gen_expr = predict_table[VN_index - 1][InputQueue.front()];
+            if (gen_expr.length() == 0) {
+                cout << "error" << endl;
+                return;
+            }
+            AnaStack.pop();
+
+            string tmp_str;
+            for (auto it = gen_expr.rbegin(); *it; it++) {
+                auto ch = *it;
+                if (ch == '~') break;
+                if (ch == '\'')
+                    tmp_str.push_back(*(it++));
+                tmp_str.insert(tmp_str.begin(), *(it));
+                AnaStack.emplace(tmp_str);
+                cout << tmp_str << " TOP:" << AnaStack.top() << endl;
+                tmp_str.clear();
+            }
+        } else {
+            if (AnaStack.top()[0] == InputQueue.front()) {
+                AnaStack.pop();
+                InputQueue.pop();
+            } else {
+                cout << "error" << endl;
+            }
+        }
+    }
+    cout << "success" << endl;
+}
+
 int main() {
     int n;
     char s[MAX];
@@ -332,6 +379,7 @@ int main() {
         make_first();
         make_follow();
         make_table();
+        parse();
     }
 }
 
