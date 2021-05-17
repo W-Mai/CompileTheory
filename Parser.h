@@ -37,9 +37,13 @@ struct Program {
 
 };
 
+
 class Parser {
+    Lexer *lexer;
 public:
     explicit Parser(Lexer *lexer);
+
+    void parse();
 };
 
 

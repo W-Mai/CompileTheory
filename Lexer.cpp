@@ -137,6 +137,7 @@ Token Lexer::next() {
             }
     }
 
+    current_token = tmp_token;
     return tmp_token;
 }
 
@@ -198,4 +199,8 @@ TOKEN_SYN Lexer::is_key_word(const char *word) {
         if (!strcmp(word, KEY_WORD[i]))return static_cast<TOKEN_SYN>(i + 1);
     }
     return TOKEN_SYN::ERROR;
+}
+
+Token Lexer::current() {
+    return current_token;
 }

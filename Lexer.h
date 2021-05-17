@@ -47,7 +47,6 @@ enum TOKEN_SYN {
 };
 
 
-
 struct Token {
     TOKEN_SYN syn;
     uint8_t *token;
@@ -62,6 +61,7 @@ class Lexer {
     uint8_t *code_ptr;
     int32_t current_index;
     int32_t current_index_end;
+    Token current_token;
 
     inline uint8_t gc() const; // get char;
     inline uint8_t nc(); // next char;
@@ -87,6 +87,8 @@ public:
     explicit Lexer(uint8_t *src);
 
     Token next();
+
+    Token current();
 
     static Token make_token(TOKEN_SYN syn, uint32_t length);
 };
