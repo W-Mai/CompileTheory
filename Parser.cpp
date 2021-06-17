@@ -4,18 +4,21 @@
 
 #include "Parser.h"
 
-void E(Lexer *lexer);
+string S(Lexer *lexer);
 
-void E_(Lexer *lexer);
+string E(Lexer *lexer);
 
-void T(Lexer *lexer);
+string E_(Lexer *lexer);
 
-void T_(Lexer *lexer);
+string T(Lexer *lexer);
 
-void F(Lexer *lexer);
+string T_(Lexer *lexer);
 
-void F_(Lexer *lexer);
+string F(Lexer *lexer);
 
+string make_temporary_var();
+
+string make_tri(string &lv, string &rv);
 
 Parser::Parser(Lexer *lex) {
     lexer = lex;
@@ -23,83 +26,133 @@ Parser::Parser(Lexer *lex) {
 
 void Parser::parse() {
     lexer->next();
-    E(lexer);
+    S(lexer);
 }
 
-void E(Lexer *lexer) {
-    T(lexer);
-    E_(lexer);
-}
-
-void E_(Lexer *lexer) {
+string S(Lexer *lexer) {
+    auto f = F(lexer);
     auto token = lexer->current();
-//    token.print();
+    if (token.syn == TOKEN_SYN::SYM_EQUAL){
+        lexer->next();
+        auto tmp = E(lexer);
+
+        make_tri(f, tmp);
+    }
+    return {};
+}
+
+string E(Lexer *lexer) {
+    auto tmp = T(lexer);
+    tmp += E_(lexer);
+    auto tVar = make_temporary_var();
+    make_tri(tVar, tmp);
+    return tVar;
+}
+
+string E_(Lexer *lexer) {
+    auto token = lexer->current();
     switch (token.syn) {
-        case TOKEN_SYN::SYM_PLUS:
+        case TOKEN_SYN::SYM_PLUS: {
             lexer->next();
-            T(lexer);
-            E_(lexer);
-            break;
-        case TOKEN_SYN::SYM_MINUS:
+            string tmp = T(lexer);
+            tmp += E_(lexer);
+
+            auto tVar = make_temporary_var();
+            make_tri(tVar, tmp);
+
+            return " + " + tVar;
+        }
+        case TOKEN_SYN::SYM_MINUS: {
             lexer->next();
-            T(lexer);
-            E_(lexer);
-            break;
+            string tmp = T(lexer);
+            tmp += E_(lexer);
+
+            auto tVar = make_temporary_var();
+            make_tri(tVar, tmp);
+
+            return " - " + tVar;
+        }
         case TOKEN_SYN::EOF_:
-            cout << "Access" << endl;
-            exit(0);
+//            cout << "Access" << endl;
+//            exit(0);
         default:
             break;
     }
+    return {};
 }
 
-void T(Lexer *lexer) {
-    F(lexer);
-    T_(lexer);
+string T(Lexer *lexer) {
+    auto tmp = F(lexer);
+    tmp += T_(lexer);
+
+    auto tVar = make_temporary_var();
+    make_tri(tVar, tmp);
+    return tVar;
 }
 
-void T_(Lexer *lexer) {
+string T_(Lexer *lexer) {
     auto token = lexer->current();
-//    token.print();
     switch (token.syn) {
-        case TOKEN_SYN::SYM_ASTERISK:
+        case TOKEN_SYN::SYM_ASTERISK: {
             lexer->next();
-            F(lexer);
-            T_(lexer);
-            break;
-        case TOKEN_SYN::SYM_SLASH:
+            string tmp = F(lexer);
+            tmp = tmp + T_(lexer);
+
+            auto tVar = make_temporary_var();
+            make_tri(tVar, tmp);
+
+            return " * " + tVar;
+        }
+        case TOKEN_SYN::SYM_SLASH: {
             lexer->next();
-            F(lexer);
-            T_(lexer);
-            break;
+            string tmp = F(lexer);
+            tmp = tmp + T_(lexer);
+
+            auto tVar = make_temporary_var();
+            make_tri(tVar, tmp);
+
+            return " / " + tVar;
+        }
         case TOKEN_SYN::EOF_:
-            cout << "Access" << endl;
-            exit(0);
+//            cout << "Access" << endl;
         default:
             break;
     }
+    return {};
 }
 
-void F(Lexer *lexer) {
+string F(Lexer *lexer) {
     auto token = lexer->current();
-//    token.print();
     switch (token.syn) {
         case TOKEN_SYN::ID:
             lexer->next();
-            break;
+            return (char *) (token.token);
         case TOKEN_SYN::NUM:
             lexer->next();
-            break;
-        case TOKEN_SYN::SYM_PARENTHESES_LEFT:
+            return (char *) (token.token);
+        case TOKEN_SYN::SYM_PARENTHESES_LEFT: {
             lexer->next();
-            E(lexer);
+            string tmp = /*"(" + */E(lexer);
             if (lexer->current().syn != TOKEN_SYN::SYM_PARENTHESES_RIGHT) break;
             lexer->next();
-            break;
+            return tmp/* + ")"*/;
+        }
         case TOKEN_SYN::EOF_:
-            cout << "Access" << endl;
-            exit(0);
+//            cout << "Access" << endl;
+//            exit(0);
         default:
             break;
     }
+    return {};
+}
+
+int count = 0;
+
+string make_temporary_var() {
+    return "T" + to_string(count++);
+}
+
+string make_tri(string &lv, string &rv) {
+    cout << lv << " = " << rv << endl;
+    return {};
 }
