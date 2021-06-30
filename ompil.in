@@ -1,0 +1,16 @@
+main() {
+    int x, y;
+    int z;
+    printf("Please input x and y :\n");
+    read(x);
+    read(y);
+    z = (x + y * 5) * 4 / 3;
+    if(z > 10){
+        printf("%d\n", z);
+    }
+    func();
+}
+func(){
+    int x;
+    read(x);
+}
