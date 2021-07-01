@@ -5,10 +5,10 @@
 #ifndef COMPILETHEORY_LRTABLES_H
 #define COMPILETHEORY_LRTABLES_H
 
-#include <map>
 #include "Constants.h"
 
 
-//extern const ACTION action_table;
+extern const ACTIONTable_type action_table;
+extern const GOTOTable_type goto_table;
 
 #endif //COMPILETHEORY_LRTABLES_H

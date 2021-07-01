@@ -13,7 +13,7 @@ int main() {
     string input((istreambuf_iterator<char>(fin)), (istreambuf_iterator<char>()));;
 
     Token token{};
-    lexer = new Lexer((uint8_t *) input.c_str());
+    lexer = new Lexer(input);
 
     while (true) {
         token = lexer->next();

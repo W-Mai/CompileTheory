@@ -1,5 +1,5 @@
 
-main(){
+main haha(){
   int a = 3233;
   if(a>=1){
       char b = 4

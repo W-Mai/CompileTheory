@@ -13,7 +13,7 @@ using namespace std;
 
 class Lexer {
 
-    uint8_t *code_ptr;
+    string code_ptr;
     TokenPos current_index{};
     int32_t current_index_end;
 
@@ -25,9 +25,9 @@ class Lexer {
 
     static inline bool is_whitespace(uint8_t ch);
 
-    static TOKEN_SYN is_key_word(const char *word);
+    static TOKEN_SYN is_key_word(const string &word);
 
-    void copy_str(uint8_t *dst, int32_t dst_index);
+    void copy_str(string &dst, int32_t dst_index);
 
     int32_t read_num();
 
@@ -38,11 +38,11 @@ class Lexer {
 
 public:
 
-    explicit Lexer(uint8_t *src);
+    explicit Lexer(string &src);
 
     Token next();
 
-    Token make_token(TOKEN_SYN syn, uint32_t length);
+    Token make_token(TOKEN_SYN syn);
 };
 
 

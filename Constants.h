@@ -7,8 +7,10 @@
 
 #include <iostream>
 #include <stack>
+#include <map>
+#include <vector>
 
-extern const char *KEY_WORD[];
+extern const std::string KEY_WORD[];
 
 enum TOKEN_SYN {
     MAIN = 1,
@@ -57,7 +59,7 @@ struct TokenPos {
 
 struct Token {
     TOKEN_SYN syn;
-    uint8_t *token;
+    std::string token;
     TokenPos start_pos;
     TokenPos end_pos;
 
@@ -91,6 +93,12 @@ struct TableElement {
     TableElementType type = TableElementType::NOTHING;
     int id{};
 };
-//typedef std::map<,std::map<int,TableElement>> ACTION;
-//typedef std::map<,std::map<int,TableElement>> GOTO;
+
+struct GenExpr {
+    std::string left;
+    std::vector<Token> right;
+};
+
+typedef std::map<TOKEN_SYN, std::vector<TableElement>> ACTIONTable_type;
+typedef std::map<TOKEN_SYN, std::vector<TableElement>> GOTOTable_type;
 #endif //COMPILETHEORY_CONSTANTS_H

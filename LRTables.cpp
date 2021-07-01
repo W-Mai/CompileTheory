@@ -3,6 +3,7 @@
 //
 #include "LRTables.h"
 
-//const ACTION action_table{
-//    {{TableElementType::GENERATE_EXPR, 2}}
-//};
+extern const ACTIONTable_type action_table{
+        {}
+};
+extern const GOTOTable_type goto_table{};
