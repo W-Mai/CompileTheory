@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "Lexer.h"
 
 using namespace std;
@@ -6,17 +7,13 @@ using namespace std;
 Lexer *lexer;
 
 int main() {
-    auto input = "int main(){"
-                 "  int a = 3233;"
-                 "  if(a>1){"
-                 "      char b = 4"
-                 "  }else{"
-                 "      while(b==3);"
-                 "  }"
-                 "}";
+    string input_file_path = "/Users/esther/Documents/Projects/CompileTheory/test.c";
+//    cin >> input_file_path;
+    auto fin = ifstream (input_file_path);
+    string input((istreambuf_iterator<char>(fin)), (istreambuf_iterator<char>()));;
 
     Token token{};
-    lexer = new Lexer((uint8_t *) input);
+    lexer = new Lexer((uint8_t *) input.c_str());
 
     while (true) {
         token = lexer->next();

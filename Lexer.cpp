@@ -5,11 +5,11 @@
 #include <cstring>
 #include "Lexer.h"
 
-const char *KEY_WORD[] = {"main", "int", "char", "if", "else", "for", "while"};
+const char *KEY_WORD[] = {"main", "int", "float", "if", "else", "for", "while", "continue", "break", "mat"};
 
 Lexer::Lexer(uint8_t *src) {
     code_ptr = src;
-    current_index = 0;
+    current_index = {0, 0, 0};
     current_index_end = 0;
 }
 
@@ -27,93 +27,120 @@ Token Lexer::next() {
         case '=':
             nc();
             if (gc() == '=') {
-                tmp_token = Token{TOKEN_SYN::SYN_LOGICAL_EQUAL, (uint8_t *) "=="};
+                tmp_token = Token{TOKEN_SYN::SYN_LOGICAL_EQUAL, (uint8_t *) "==",
+                                  {current_index.row, current_index.col - 2, current_index.index - 2}, current_index};
                 nc();
                 break;
             }
-            tmp_token = Token{TOKEN_SYN::SYM_EQUAL, (uint8_t *) "="};
+            tmp_token = Token{TOKEN_SYN::SYM_EQUAL, (uint8_t *) "=",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             break;
         case '+':
-            tmp_token = Token{TOKEN_SYN::SYM_PLUS, (uint8_t *) "+"};
+            tmp_token = Token{TOKEN_SYN::SYM_PLUS, (uint8_t *) "+",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             nc();
             break;
         case '-':
-            tmp_token = Token{TOKEN_SYN::SYM_MINUS, (uint8_t *) "-"};
+            tmp_token = Token{TOKEN_SYN::SYM_MINUS, (uint8_t *) "-",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             nc();
             break;
         case '*':
-            tmp_token = Token{TOKEN_SYN::SYM_ASTERISK, (uint8_t *) "*"};
+            tmp_token = Token{TOKEN_SYN::SYM_ASTERISK, (uint8_t *) "*",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             nc();
             break;
         case '/':
-            tmp_token = Token{TOKEN_SYN::SYM_SLASH, (uint8_t *) "/"};
+            tmp_token = Token{TOKEN_SYN::SYM_SLASH, (uint8_t *) "/",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             nc();
             break;
         case '(':
-            tmp_token = Token{TOKEN_SYN::SYM_PARENTHESES_LEFT, (uint8_t *) "("};
+            tmp_token = Token{TOKEN_SYN::SYM_PARENTHESES_LEFT, (uint8_t *) "(",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             nc();
             break;
         case ')':
-            tmp_token = Token{TOKEN_SYN::SYM_PARENTHESES_RIGHT, (uint8_t *) ")"};
+            tmp_token = Token{TOKEN_SYN::SYM_PARENTHESES_RIGHT, (uint8_t *) ")",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             nc();
             break;
         case '[':
-            tmp_token = Token{TOKEN_SYN::SYM_BRACKETS_LEFT, (uint8_t *) "["};
+            tmp_token = Token{TOKEN_SYN::SYM_BRACKETS_LEFT, (uint8_t *) "[",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             nc();
             break;
         case ']':
-            tmp_token = Token{TOKEN_SYN::SYM_BRACKETS_RIGHT, (uint8_t *) "]"};
+            tmp_token = Token{TOKEN_SYN::SYM_BRACKETS_RIGHT, (uint8_t *) "]",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             nc();
             break;
         case '{':
-            tmp_token = Token{TOKEN_SYN::SYM_BRACE_LEFT, (uint8_t *) "{"};
+            tmp_token = Token{TOKEN_SYN::SYM_BRACE_LEFT, (uint8_t *) "{",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             nc();
             break;
         case '}':
-            tmp_token = Token{TOKEN_SYN::SYM_BRACE_RIGHT, (uint8_t *) "}"};
+            tmp_token = Token{TOKEN_SYN::SYM_BRACE_RIGHT, (uint8_t *) "}",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             nc();
             break;
         case ',':
-            tmp_token = Token{TOKEN_SYN::SYM_COMMA, (uint8_t *) ","};
+            tmp_token = Token{TOKEN_SYN::SYM_COMMA, (uint8_t *) ",",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             nc();
             break;
         case ':':
-            tmp_token = Token{TOKEN_SYN::SYM_COLON, (uint8_t *) ":"};
+            tmp_token = Token{TOKEN_SYN::SYM_COLON, (uint8_t *) ":",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             nc();
             break;
         case ';':
-            tmp_token = Token{TOKEN_SYN::SYM_SEMICOLON, (uint8_t *) ";"};
+            tmp_token = Token{TOKEN_SYN::SYM_SEMICOLON, (uint8_t *) ";",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             nc();
             break;
         case '>':
             nc();
             if (gc() == '=') {
-                tmp_token = Token{TOKEN_SYN::SYN_GREATER_EQUAL, (uint8_t *) ">="};
+                tmp_token = Token{TOKEN_SYN::SYN_GREATER_EQUAL, (uint8_t *) ">=",
+                                  {current_index.row, current_index.col - 2, current_index.index - 2}, current_index};
                 nc();
                 break;
             }
-            tmp_token = Token{TOKEN_SYN::SYN_GREATER, (uint8_t *) ">"};
+            tmp_token = Token{TOKEN_SYN::SYN_GREATER, (uint8_t *) ">",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             break;
         case '<':
             nc();
             if (gc() == '=') {
-                tmp_token = Token{TOKEN_SYN::SYN_LESSER_EQUAL, (uint8_t *) "<="};
+                tmp_token = Token{TOKEN_SYN::SYN_LESSER_EQUAL, (uint8_t *) "<=",
+                                  {current_index.row, current_index.col - 2, current_index.index - 2}, current_index};
                 nc();
                 break;
             }
-            tmp_token = Token{TOKEN_SYN::SYN_LESSER, (uint8_t *) "<"};
+            tmp_token = Token{TOKEN_SYN::SYN_LESSER, (uint8_t *) "<",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             break;
         case '!':
             nc();
             if (gc() == '=') {
-                tmp_token = Token{TOKEN_SYN::SYN_NOT_EQUAL, (uint8_t *) "!="};
+                tmp_token = Token{TOKEN_SYN::SYN_NOT_EQUAL, (uint8_t *) "!=",
+                                  {current_index.row, current_index.col - 2, current_index.index - 2}, current_index};
                 nc();
                 break;
             }
-            tmp_token = Token{TOKEN_SYN::SYN_NOT, (uint8_t *) "!"};
+            tmp_token = Token{TOKEN_SYN::SYN_NOT, (uint8_t *) "!",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
+            break;
+        case '|':
+            tmp_token = Token{TOKEN_SYN::SYN_VERTICAL_LINE, (uint8_t *) "|",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
+            nc();
             break;
         case 0:
-            tmp_token = Token{TOKEN_SYN::EOF_, (uint8_t *) "\0"};
+            tmp_token = Token{TOKEN_SYN::EOF_, (uint8_t *) "\0",
+                              {current_index.row, current_index.col - 1, current_index.index - 1}, current_index};
             nc();
             break;
         default:
@@ -124,11 +151,14 @@ Token Lexer::next() {
                 tmp_str_index_end = read_id();
                 tmp_syn = TOKEN_SYN::ID;
             } else {
-                tmp_str_index_end = current_index + 1;
+                tmp_str_index_end = current_index.index + 1;
             }
-            tmp_str_len = tmp_str_index_end - current_index;
+            tmp_str_len = tmp_str_index_end - current_index.index;
             tmp_token = make_token(tmp_syn, tmp_str_len);
             copy_str(tmp_token.token, tmp_str_index_end);
+            tmp_token.start_pos = {current_index.row, current_index.col - tmp_str_len,
+                                   current_index.index - tmp_str_len};
+            tmp_token.end_pos = current_index;
             if (tmp_token.syn == TOKEN_SYN::ID) {
                 TOKEN_SYN tmp_keyword_syn = is_key_word(reinterpret_cast<const char *>(tmp_token.token));
                 if (tmp_keyword_syn != TOKEN_SYN::ERROR) {
@@ -141,11 +171,18 @@ Token Lexer::next() {
 }
 
 uint8_t Lexer::gc() const {
-    return code_ptr[current_index];
+    return code_ptr[current_index.index];
 }
 
 uint8_t Lexer::nc() {
-    return code_ptr[current_index++];
+    current_index.col++;
+    if (gc() == '\r') {
+        current_index.col = 0;
+        current_index.row++;
+        current_index.index++;
+        if (gc() != '\n')return gc();
+    }
+    return code_ptr[current_index.index++];
 }
 
 bool Lexer::is_digit(uint8_t ch) {
@@ -156,15 +193,17 @@ bool Lexer::is_letter(uint8_t ch) {
     return ('a' <= ch and ch <= 'z') or ('A' <= ch and ch <= 'Z');
 }
 
-int32_t Lexer::read_num() const {
-    int32_t t = current_index;
+int32_t Lexer::read_num() {
+    int32_t t = current_index.index;
     while (is_digit(code_ptr[t]))t++;
+    current_index.col += t - current_index.index - 1;
     return t;
 }
 
-int32_t Lexer::read_id() const {
-    int32_t t = current_index + 1; //第一个肯定是字母，所以跳过第一个，符合文法规定。
+int32_t Lexer::read_id() {
+    int32_t t = current_index.index + 1; //第一个肯定是字母，所以跳过第一个，符合文法规定。
     while (is_letter(code_ptr[t]) or is_digit(code_ptr[t]))t++;
+    current_index.col += t - current_index.index - 1;
     return t;
 }
 
@@ -178,10 +217,10 @@ bool Lexer::is_whitespace(uint8_t ch) {
 
 void Lexer::copy_str(uint8_t *dst, int32_t dst_index) {
     if (!dst)return;
-    for (int i = current_index; i < dst_index; ++i) {
-        dst[i - current_index] = code_ptr[i];
+    for (int i = current_index.index; i < dst_index; ++i) {
+        dst[i - current_index.index] = code_ptr[i];
     }
-    current_index = dst_index;
+    current_index.index = dst_index;
 }
 
 Token Lexer::make_token(TOKEN_SYN syn, uint32_t length) {
@@ -189,6 +228,7 @@ Token Lexer::make_token(TOKEN_SYN syn, uint32_t length) {
     token->syn = syn;
     token->token = new uint8_t[length + 1];
     token->token[length] = 0;
+    token->start_pos = current_index;
     return *token;
 }
 

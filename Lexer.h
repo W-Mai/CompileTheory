@@ -13,12 +13,16 @@ using namespace std;
 enum TOKEN_SYN {
     MAIN = 1,
     INT = 2,
-    CHAR = 3,
+    FLOAT = 3,
     IF = 4,
     ELSE = 5,
     FOR = 6,
     WHILE = 7,
-    ID = 10,
+    CONTINUE = 8,
+    BREAK = 9,
+    MATRIX = 10,
+
+    ID = 15,
     NUM = 20,
 
     SYM_EQUAL = 30,
@@ -42,25 +46,32 @@ enum TOKEN_SYN {
     SYN_LOGICAL_EQUAL = 48,
     SYN_NOT = 49,
     SYN_NOT_EQUAL = 50,
+    SYN_VERTICAL_LINE = 51,
     EOF_ = 1000,
     ERROR = -1
 };
 
-
+struct TokenPos {
+    int32_t row, col, index;
+};
 
 struct Token {
     TOKEN_SYN syn;
     uint8_t *token;
+    TokenPos start_pos;
+    TokenPos end_pos;
 
     void print() const {
-        std::cout << "(" << syn << "," << token << ")";
+        std::cout << "(" << syn << "," << token << ") {"
+                  << start_pos.row << ", " << start_pos.col << ", " << start_pos.index << "} - {"
+                  << end_pos.row << ", " << end_pos.col << ", " << end_pos.index << "}";
     }
 };
 
 class Lexer {
 
     uint8_t *code_ptr;
-    int32_t current_index;
+    TokenPos current_index{};
     int32_t current_index_end;
 
     inline uint8_t gc() const; // get char;
@@ -75,9 +86,9 @@ class Lexer {
 
     void copy_str(uint8_t *dst, int32_t dst_index);
 
-    int32_t read_num() const;
+    int32_t read_num();
 
-    int32_t read_id() const;
+    int32_t read_id();
 
     void eat_whitespace();
 
@@ -88,7 +99,7 @@ public:
 
     Token next();
 
-    static Token make_token(TOKEN_SYN syn, uint32_t length);
+    Token make_token(TOKEN_SYN syn, uint32_t length);
 };
 
 
