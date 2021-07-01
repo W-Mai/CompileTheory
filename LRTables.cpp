@@ -3,7 +3,12 @@
 //
 #include "LRTables.h"
 
-extern const ACTIONTable_type action_table{
-        {}
-};
-extern const GOTOTable_type goto_table{};
+std::vector<GenExpr> gen_expressions{};
+ACTIONTable_type action_table{};
+GOTOTable_type goto_table{};
+
+void init_lr_tables(){
+    gen_expressions.push_back({"A", {{.token="s"}}});
+
+    action_table[TOKEN_SYN::SYN_VERTICAL_LINE] = {};
+}

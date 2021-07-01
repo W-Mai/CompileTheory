@@ -100,5 +100,6 @@ struct GenExpr {
 };
 
 typedef std::map<TOKEN_SYN, std::vector<TableElement>> ACTIONTable_type;
-typedef std::map<TOKEN_SYN, std::vector<TableElement>> GOTOTable_type;
+typedef std::map<std::string, std::vector<TableElement>> GOTOTable_type;
+
 #endif //COMPILETHEORY_CONSTANTS_H
