@@ -7,66 +7,9 @@
 
 #include <iostream>
 #include "cinttypes"
+#include "Constants.h"
 
 using namespace std;
-
-enum TOKEN_SYN {
-    MAIN = 1,
-    INT = 2,
-    FLOAT = 3,
-    IF = 4,
-    ELSE = 5,
-    FOR = 6,
-    WHILE = 7,
-    CONTINUE = 8,
-    BREAK = 9,
-    MATRIX = 10,
-
-    ID = 15,
-    NUM = 20,
-
-    SYM_EQUAL = 30,
-    SYM_PLUS = 31,
-    SYM_MINUS = 32,
-    SYM_ASTERISK = 33,
-    SYM_SLASH = 34,
-    SYM_PARENTHESES_LEFT = 35,
-    SYM_PARENTHESES_RIGHT = 36,
-    SYM_BRACKETS_LEFT = 37,
-    SYM_BRACKETS_RIGHT = 38,
-    SYM_BRACE_LEFT = 39,
-    SYM_BRACE_RIGHT = 40,
-    SYM_COMMA = 41,
-    SYM_COLON = 42,
-    SYM_SEMICOLON = 43,
-    SYN_GREATER = 44,
-    SYN_LESSER = 45,
-    SYN_GREATER_EQUAL = 46,
-    SYN_LESSER_EQUAL = 47,
-    SYN_LOGICAL_EQUAL = 48,
-    SYN_NOT = 49,
-    SYN_NOT_EQUAL = 50,
-    SYN_VERTICAL_LINE = 51,
-    EOF_ = 1000,
-    ERROR = -1
-};
-
-struct TokenPos {
-    int32_t row, col, index;
-};
-
-struct Token {
-    TOKEN_SYN syn;
-    uint8_t *token;
-    TokenPos start_pos;
-    TokenPos end_pos;
-
-    void print() const {
-        std::cout << "(" << syn << "," << token << ") {"
-                  << start_pos.row << ", " << start_pos.col << ", " << start_pos.index << "} - {"
-                  << end_pos.row << ", " << end_pos.col << ", " << end_pos.index << "}";
-    }
-};
 
 class Lexer {
 

@@ -5,5 +5,5 @@
 #include "Parser.h"
 
 Parser::Parser(Lexer *lexer) {
-
+    this->lexer = lexer;
 }

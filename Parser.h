@@ -6,38 +6,19 @@
 #define COMPILETHEORY_PARSER_H
 
 #include <cinttypes>
+#include <stack>
+#include <vector>
 #include "Lexer.h"
-
-struct NodeVal {
-    Token val;
-};
-
-struct NodeExpression {
-    NodeExpression *left;
-    NodeExpression *op;
-    NodeExpression *right;
-};
-
-struct NodeBinaryExpression : NodeExpression {
-
-};
-
-struct NodeFunction {
-    Token name;
-};
-
-union ASTNodeVal {
-    NodeVal val;
-    NodeExpression expression;
-    NodeFunction function;
-};
+#include "LRTables.h"
 
 
-struct Program {
-
-};
 
 class Parser {
+private:
+    DealStack Symbols;
+    DealStack Status;
+
+    Lexer *lexer;
 public:
     explicit Parser(Lexer *lexer);
 };
